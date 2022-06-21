@@ -72,7 +72,7 @@ class Snake:
     def get_map_with_info(self):
         map_ = self.get_normal_map().split("\n")
         info = [i for i in self.get_map_info().split("\n") if i]
-        info_lines = ["".join(list(i)) for i in zip(map_, info)]
+        info_lines = [" ".join([s.strip() for s in list(i)]) for i in zip(map_, info)]
         map_ = "\n".join(info_lines + map_[len(info_lines):])
         return map_
 
@@ -206,6 +206,9 @@ class Snake:
     def isvoid(self, x: int, y: int) -> bool:
         return self.__map[y][x] == self.__chars["void"]
 
+    def issnake(self, x: int, y: int) -> bool:
+        return self.__map[y][x] == self.__chars["snake"]
+
     def dead(self):
         for x, y in self.__snake:
             self.__map[y][x] = self.__chars["food"]
@@ -226,7 +229,7 @@ class Snake:
                 next_y = y - 1
                 if next_y < 0:
                     next_y = heigth - 1
-                if self.iswall(x, next_y):
+                if self.iswall(x, next_y) or self.issnake(x, next_y):
                     self.dead()
                 elif snake[1][1] != next_y:
                     snake.insert(0, (x, next_y))
@@ -247,7 +250,7 @@ class Snake:
                 next_y = y + 1
                 if next_y > heigth-1:
                     next_y = 0
-                if self.iswall(x, next_y):
+                if self.iswall(x, next_y) or self.issnake(x, next_y):
                     self.dead()
                 elif snake[1][1] != next_y:
                     snake.insert(0, (x, next_y))
@@ -268,7 +271,7 @@ class Snake:
                 next_x = x - 1
                 if next_x < 0:
                     next_x = width - 1
-                if self.iswall(next_x, y):
+                if self.iswall(next_x, y) or self.issnake(next_x, y):
                     self.dead()
                 elif snake[1][0] != next_x:
                     snake.insert(0, (next_x, y))
@@ -289,7 +292,7 @@ class Snake:
                 next_x = x + 1
                 if next_x > width-1:
                     next_x = 0
-                if self.iswall(next_x, y):
+                if self.iswall(next_x, y) or self.issnake(next_x, y):
                     self.dead()
                 elif snake[1][0] != next_x:
                     snake.insert(0, (next_x, y))

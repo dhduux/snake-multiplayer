@@ -34,6 +34,9 @@ data_chars = json.loads(jsons[jsons.find("&&&")+3:])
 file = file[:file.find("{")]
 # print(file, chars, colors, data_chars, sep="\n")
 
+with open("bindings.json") as f:
+    binds = json.load(f)
+
 s = Snake(file, chars, data_chars, 1, "pl1")
 s.get_map()
 
@@ -46,11 +49,11 @@ class Play(App):
         self.set_interval(0.2, self.draw_map)
 
     async def on_load(self):
-        await self.bind("q", "quit")
-        await self.bind("up", "move('up')")
-        await self.bind("down", "move('down')")
-        await self.bind("left", "move('left')")
-        await self.bind("right", "move('right')")
+        await self.bind(binds["quit"], "quit")
+        await self.bind(binds["up"], "move('up')")
+        await self.bind(binds["down"], "move('down')")
+        await self.bind(binds["left"], "move('left')")
+        await self.bind(binds["right"], "move('right')")
 
     async def action_move(self, side):
         if side not in ("up", "down", "left", "right"):
